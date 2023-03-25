@@ -4,6 +4,7 @@ import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./server/api/root";
+import { getAuthHeader } from "./utils/accessTokenStore";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url

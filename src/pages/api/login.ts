@@ -24,7 +24,7 @@ export const post: APIRoute = async ({ request }) => {
     });
     const hash = sha256(`${data.password}${user?.salt}`).toString();
     if (user && hash == user.hash) {
-      const access_token = createAccessToken({
+      const access_token = await createAccessToken({
         id: user.id,
         name: user.name,
         numberOfDecks: user.decks.length,

@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { z } from "zod";
+  import { z } from "zod";
   import Button from "./Button.svelte";
   import Input from "./Input.svelte";
-  import { Form, createForm } from "svelte-forms-lib";
-    import { tokenStorage } from "src/utils/accessTokenStore";
+  import { createForm } from "svelte-forms-lib";
+  import { tokenStorage } from "src/utils/accessTokenStore";
+  import { pushNewMessage } from "src/utils/notificationStore";
+  import { passwordRegExp } from "src/utils/constants";
 
-  const passwordRegExp = /(\w+\d+[!&\?@#\$%\^\*]+)/ 
   type FormData = {
     username: string;
     password: string;
@@ -64,7 +65,6 @@
     onSubmit: () => {},
   });
  const onSubmit = async (form: FormData) => {
-      console.log('submit');
     isLoading = true;
     const reposne = await fetch("/api/login", {
       method: 'POST',
@@ -73,7 +73,9 @@
     const parsedBody = await reposne.json();
     const responseSchema = z.object({
       id: z.string(),
-      status: z.string(),
+      state: z.string()
+        .refine(val => val == 'Success' || val == 'Failure')
+        .transform(val => val as Message['state']),
       message: z.string(),
       access_token: z.string().nullish(),
     })
@@ -83,6 +85,7 @@
       isSuccess = true;
       isFailed = false;
       const { access_token, ...message } = validatedBody.data;
+      pushNewMessage(message);
       if (access_token) {
        tokenStorage.set(access_token);
        location.assign("/home");
@@ -97,8 +100,7 @@
 <div class="flex items-center justify-center relative font-fredoka w-full">
   <div class="flex items-center justify-center w-full">
     <form
-      on:submit={(event) => {
-        event.preventDefault();
+      on:submit|preventDefault={() => {
         onSubmit($form);
       }}
       class="flex flex-col gap-5 sm:rounded-lg text-xl bg-purple-900 p-5 
