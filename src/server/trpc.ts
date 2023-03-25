@@ -35,7 +35,7 @@ import {
   getTokenFromHeader,
   validateToken,
 } from "src/utils/token";
-import { tokenStorage } from "src/utils/accessTokenStore";
+import { setTokenStorage } from "src/utils/accessTokenStore";
 
 const pokemonApi = new PokemonClient();
 
@@ -84,7 +84,7 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
         });
         if (response.status == 200) {
           const token = await response.json();
-          tokenStorage.set(token);
+          setTokenStorage(token);
           session = decodeToken(token);
         }
       }

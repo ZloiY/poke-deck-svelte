@@ -3,7 +3,7 @@
   import Button from "./Button.svelte";
   import Input from "./Input.svelte";
   import { createForm } from "svelte-forms-lib";
-  import { tokenStorage } from "src/utils/accessTokenStore";
+  import { setTokenStorage } from "src/utils/accessTokenStore";
   import { pushNewMessage } from "src/utils/notificationStore";
   import { passwordRegExp } from "src/utils/constants";
 
@@ -87,7 +87,7 @@
       const { access_token, ...message } = validatedBody.data;
       pushNewMessage(message);
       if (access_token) {
-       tokenStorage.set(access_token);
+       setTokenStorage(access_token);
        location.assign("/home");
       }
     } else {

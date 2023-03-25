@@ -5,7 +5,7 @@
   import { passwordRegExp } from "src/utils/constants";
     import { trpcAstro } from "src/api";
     import { pushNewMessage } from "src/utils/notificationStore";
-    import { tokenStorage } from "src/utils/accessTokenStore";
+    import { setTokenStorage } from "src/utils/accessTokenStore";
     import { z } from "zod";
 
   type FormData = {
@@ -100,7 +100,7 @@
         const { access_token, ...message } = validatedBody.data;
         pushNewMessage(message);
         if (access_token) {
-         tokenStorage.set(access_token);
+         setTokenStorage(access_token);
          location.assign("/home");
         }
       }

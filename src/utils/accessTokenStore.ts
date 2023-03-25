@@ -4,7 +4,7 @@ import { setAuthHeader } from "src/api";
 
 const localToken = typeof window !== 'undefined' && localStorage.getItem("poke_deck_svelte_token");
 
-export const tokenStorage = writable(localToken);
+const tokenStorage = writable(localToken);
 tokenStorage.subscribe((newToken) => {
   if (newToken && typeof window !== 'undefined') {
     localStorage.setItem("poke_deck_svelte_token", newToken);
@@ -12,17 +12,17 @@ tokenStorage.subscribe((newToken) => {
   }
 });
 
+export const setTokenStorage = (token: string | null) => {
+  tokenStorage.set(token);
+}
+
 export const resetTokens = () => {
   localStorage.setItem("poke_deck_svelte_token", "");
   setAuthHeader("");
   tokenStorage.set(null);
 }
 
-export const authToken = readonly(tokenStorage);
-export const authHeader = derived(authToken, ($authToken) =>
-  $authToken ? `Bearer ${$authToken}` : ""
-);
-export const authPayload = derived(authToken, ($tokenStorage) => {
+export const authPayload = derived(readonly(tokenStorage), ($tokenStorage) => {
   if ($tokenStorage) {
     return decodeToken($tokenStorage);
   }
