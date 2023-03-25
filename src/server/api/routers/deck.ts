@@ -115,7 +115,7 @@ export const deckRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       const numberOfSlots =
         input.numberOfEmptySlots ?? +import.meta.env.DECK_MAX_SIZE;
-      const userId = ctx.session.user.id;
+      const userId = ctx.session.id;
       const decks = await ctx.prisma.deck.findMany({
         where: {
           userId,

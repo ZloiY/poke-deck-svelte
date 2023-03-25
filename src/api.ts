@@ -4,7 +4,15 @@ import { createTRPCProxyClient, httpBatchLink, loggerLink } from "@trpc/client";
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./server/api/root";
-import { getAuthHeader } from "./utils/accessTokenStore";
+
+let authHeader = '';
+export const setAuthHeader = (token: string) => {
+  if (token.length > 0) {
+    authHeader = `Bearer ${token}`;
+  } else {
+    authHeader = '';
+  }
+}
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -31,7 +39,7 @@ export const trpcAstro = createTRPCProxyClient<AppRouter>({
     httpBatchLink({
       url: `${getBaseUrl()}/api/trpc`,
       headers() {
-        return { Authorization: getAuthHeader() };
+        return { Authorization: authHeader };
       },
     }),
   ],
