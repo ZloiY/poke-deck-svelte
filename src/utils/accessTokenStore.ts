@@ -2,11 +2,11 @@ import { derived, readonly, writable } from "svelte/store";
 import { decodeToken } from "./token";
 import { setAuthHeader } from "src/api";
 
-const localToken = localStorage.getItem("poke_deck_svelte_token");
+const localToken = typeof window !== 'undefined' && localStorage.getItem("poke_deck_svelte_token");
 
 export const tokenStorage = writable(localToken);
 tokenStorage.subscribe((newToken) => {
-  if (newToken) {
+  if (newToken && typeof window !== 'undefined') {
     localStorage.setItem("poke_deck_svelte_token", newToken);
     setAuthHeader(newToken);
   }
