@@ -2,6 +2,8 @@
 import Layout from "src/layouts/Layout.astro";
 import Registration from "src/components/Registration.svelte";
 import Welcome from "src/components/Welcome.astro";
+
+export const prerender = true;
 ---
 <Layout title="PokeDeck SignUp">
   <div class="flex flex-col justify-center items-center h-full w-full">
