@@ -5,15 +5,6 @@ import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./server/api/root";
 
-let authHeader = '';
-export const setAuthHeader = (token: string) => {
-  if (token.length > 0) {
-    authHeader = `Bearer ${token}`;
-  } else {
-    authHeader = '';
-  }
-}
-
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return ""; // browser should use relative url
   if (import.meta.env.VERCEL_URL)
@@ -24,7 +15,7 @@ const getBaseUrl = () => {
 /**
  * A set of typesafe react-query hooks for your tRPC API
  */
-export const trpcAstro = createTRPCProxyClient<AppRouter>({
+export const trpcAstro = (authHeader: string) => createTRPCProxyClient<AppRouter>({
   /**
    * Transformer used for data de-serialization from the server
    * @see https://trpc.io/docs/data-transformers

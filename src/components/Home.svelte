@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Pokemon } from "pokenode-ts";
+  import { onMount } from "svelte";
   import type { Deck, Pokemon as PokemonDB } from "@prisma/client";
   import { pagination as paginationStore} from "src/utils/pagination";
   import { selectedPokemons } from "src/utils/selectedPokemonsStore";
@@ -9,13 +10,17 @@
   import FixedButton from "./FixedButton.svelte";
   import SearchBar from "./SearchBar.svelte";
   import Spinner from "./Spinner.svelte";
-  import { authPayload } from "src/utils/accessTokenStore";
+  import { authHeader, authPayload } from "src/utils/accessTokenStore";
   import { trpcAstro } from "src/api";
   import { flipState } from "src/utils/flipStore";
+  import CreateDeck from "./Modals/CreateDeck.svelte";
+  import AddCards from "./Modals/AddCards.svelte";
 
   export let deckId = '';
   export let search = '';
   export let page = 0;
+
+  let showModal = false;
 
   const { paginationState, ...pagination } = paginationStore({
     page,
@@ -28,13 +33,24 @@
       location.assign(`/home/${prevPage}`);
     }
   })
-  let pokemonsInDeckPromise = new Promise<PokemonDB[]>(resolve => resolve([]))
-  let emptyDeckPromise = new Promise<Deck[]>(resolve => resolve([]));
-  const promisePokemons = trpcAstro.pokemon
-  .getPokemonList.query({ offset: page * 15, limit: 15, searchQuery: search })
+  let pokemonsInDeckPromise = Promise.resolve([] as PokemonDB[]);
+  let emptyDeckPromise = Promise.resolve([] as Deck[]);
+  let promisePokemons = Promise.resolve([] as Pokemon[]) 
+  const trpcClient = trpcAstro($authHeader);
+
+  onMount(() => {
+    promisePokemons = trpcClient.pokemon
+      .getPokemonList.query({ offset: page * 15, limit: 15, searchQuery: search })
+  });
+
   $: if ($authPayload) {
-    pokemonsInDeckPromise = trpcAstro.pokemon.getPokemonsByDeckId.query(deckId);
-    emptyDeckPromise = trpcAstro.deck.getEmptyUserDecks.query({ numberOfEmptySlots: 20 });
+    pokemonsInDeckPromise = trpcClient.pokemon.getPokemonsByDeckId.query(deckId);
+    emptyDeckPromise = trpcClient.deck.getEmptyUserDecks.query({ numberOfEmptySlots: 20 });
+  }
+
+  const refetch = () => {
+    promisePokemons = trpcClient.pokemon
+     .getPokemonList.query({ offset: page * 15, limit: 15, searchQuery: search })
   }
 
   const updateQuery = (search: string) => {
@@ -45,17 +61,19 @@
 
 </script>
 <div class="flex flex-col h-full w-full">
-  <!--{(deckId || decksLength > 0) && (
-    <AddCards deckId={deckId} onSubmit={refetch} />
-  )}
-  {decksLength == 0 && !deckId && (
-    <CreateDeck create={createDeckWithCards} isLoading={deckCreating} />
-  )}-->
+  {#await emptyDeckPromise then emptyDecks}
+    {#if deckId || emptyDecks.length > 0}
+      <AddCards bind:showModal deckId={deckId} onSubmit={refetch} />
+    {/if}
+    {#if emptyDecks.length == 0 && !deckId}
+      <CreateDeck bind:showModal cards={$selectedPokemons} />
+    {/if}
+  {/await}
   {#await pokemonsInDeckPromise then pokemonsInDeck }
     <FixedButton
-    on:click={() => {}}
-    existingPokemonsLength={pokemonsInDeck?.length ?? 0}
-    />
+      on:click={() => (showModal = true)}
+      existingPokemonsLength={pokemonsInDeck?.length ?? 0}
+     />
   {/await}
   <PaginationButtons
     showNext={pagination.hasNextPage}

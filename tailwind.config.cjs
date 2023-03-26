@@ -13,7 +13,35 @@ module.exports = {
         fredoka: ['var(--font-fredoka)']
       },
       animation: {
-        'spin-slow': 'spin 1.5s linear infinite'
+        'spin-slow': 'spin 1.5s linear infinite',
+        'preview-hide': 'showPreview 1s cubic-bezier(0.4, 0, 0.6, 1)',
+        'preview-show': 'hidePreview 1s cubic-bezier(0.4, 0, 0.6, 1)',
+      },
+      keyframes: {
+          showPreview: {
+              '0%': {
+                opacity: 1,
+                transform: 'rotateY(0) perspective(300px)'
+              },
+              '80%': {
+                opacity: 0.2,
+                transform: 'rotateY(220deg) perspective(800px)'
+              },
+              '100%': {
+                opacity: 0,
+                transform: 'rotateY(180deg) perspective(600px)'
+              },
+          },
+          hidePreview: {
+              from: {
+                opacity: 0,
+                transform: 'rotateY(180deg) perspective(600px)'
+              },
+              to: {
+                opacity: 1,
+                transform: 'rotateY(0) perspective(300px)'
+              },
+          },
       }
     },
 	},

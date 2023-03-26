@@ -21,7 +21,7 @@ const alg = "HS256";
 export const validateToken = async (token: string) => {
   const maybePayload = await jwtVerify(token, secret);
   if (maybePayload) {
-    const validatedPayload = tokenScheme.safeParse(maybePayload);
+    const validatedPayload = tokenScheme.safeParse(maybePayload.payload);
     if (validatedPayload.success) {
       return validatedPayload.data;
     }

@@ -3,11 +3,13 @@
   import Loader from "@icons/loader.svg?component";
 
   export let className = '';
+  export let disabled = false;
   export let isLoading = false;
   export let type: "submit" | "button" = "button"; 
 </script>
 
 <button
+  disabled={disabled}
   type={type}
   on:click
   class={twMerge(

@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { createAccessToken, decodeToken, validateToken } from "src/utils/token";
+import { createAccessToken, decodeToken } from "src/utils/token";
 
 export const post: APIRoute = async ({ request }) => {
   const authorizationToken = request.headers.get("Authorization");
@@ -7,8 +7,9 @@ export const post: APIRoute = async ({ request }) => {
   if (access_token) {
     const maybeToken = decodeToken(access_token);
     if (maybeToken) {
-      const validRefresh = await validateToken(maybeToken.refreshToken);
-      if (validRefresh) {
+      const decodeRefresh =
+        JSON.parse(decodeURIComponent(atob(maybeToken.refreshToken.split('.')[1])));
+      if (decodeRefresh.exp > Date.now()) {
         const newToken = await createAccessToken({
           id: maybeToken.id,
           name: maybeToken.name,

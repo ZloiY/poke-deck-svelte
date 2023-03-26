@@ -74,19 +74,21 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
     let token = getTokenFromHeader(authorization);
     if (token) {
       const maybePayload = await validateToken(token);
-      if (maybePayload) {
+      if (maybePayload && maybePayload.exp < Date.now()) {
         const url = import.meta.env.VERCEL_URL
           ? `https://${import.meta.env.VERCEL_URL}/api/refresh`
           : `http://localhost:${import.meta.env.PORT ?? 3000}/api/refresh`;
         const response = await fetch(url, {
           method: "POST",
-          headers: req.headers,
+          headers: { Authorization: authorization },
         });
         if (response.status == 200) {
           const token = await response.json();
           setTokenStorage(token);
           session = decodeToken(token);
         }
+      } else {
+        session = maybePayload;
       }
     }
   }
