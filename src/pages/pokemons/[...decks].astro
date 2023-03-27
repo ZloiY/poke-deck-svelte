@@ -1,0 +1,8 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import PokemonsUserDecks from "src/components/PokemonsUserDecks.svelte";
+---
+<HeaderLayout title="PokeDeck User Decks" showFlip={false}>
+  <PokemonsUserDecks client:load/>  
+</HeaderLayout>
+
