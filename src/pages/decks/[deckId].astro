@@ -1,0 +1,10 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import OtherUserDeck from "src/components/OtherUserDeck.svelte";
+
+const { deckId } = Astro.params;
+---
+<HeaderLayout title="PokeDeck user deck" showFlip={false}>
+  <OtherUserDeck deckId={deckId ?? ""} client:load/>
+</HeaderLayout>
+

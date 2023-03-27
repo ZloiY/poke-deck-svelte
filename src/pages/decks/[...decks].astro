@@ -1,0 +1,12 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import UserDecks from "src/components/UserDecks.svelte";
+import OtherUsersDecks from "src/components/OtherUsersDecks.svelte";
+---
+<HeaderLayout showFlip={false} title="PokeDeck decks">
+    <div class="flex flex-col gap-8 w-full px-5 pb-5">
+      <UserDecks client:load/>
+      <OtherUsersDecks client:load/>
+    </div>
+</HeaderLayout>
+

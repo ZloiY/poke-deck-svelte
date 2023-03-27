@@ -11,6 +11,7 @@
   export let placeholder: string = "Select item..."
   export let value: Item | null;
   export let name: string = "";
+  export let onChange: <T extends Item>(item: T) => void;
 
   const label = 'name';
   const itemId = 'id';
@@ -22,9 +23,28 @@
       {name}
     </span>
   {/if}
-  <Select {value} {label} {itemId} {placeholder} on:change {items} class="themed">
+  <Select {value} {label} {itemId} {placeholder} {items} 
+    --background="rgb(168 85 247)"
+    --border="2px solid rgb(88 28 135)"
+    --border-hover="rgb(234 179 8)"
+    --border-radius="12px"
+    --font-size="24px"
+    --list-background="transparent"
+    --list-border="2px solid rgb(88 28 135)"
+    >
     <div class="h-8 w-8" slot="chevron-icon">
       <Chevron class="fill-purple-900 h-8 w-8"/>
+    </div>
+    <div slot="list" class="bg-transparent" let:filteredItems>
+     <div class="w-full h-full px-2 border-purple-900 bg-purple-500 rounded-b-xl border-t-0 max-h-20">
+       {#each filteredItems as item}
+         <div on:click={() => onChange(item)} class="w-full border-purple-900 bg-purple-500 text-purple-900 hover:text-white hover:bg-purple-900">
+           <span class="text-xl">
+             {item.name}
+           </span>
+         </div>
+       {/each}
+     </div>
     </div>
     <div slot="loading-icon" class="text-purple-900 h-8 w-8 animate-spin-slow">
       <Loader class="fill-purple-900 h-8 w-8"/>
@@ -32,21 +52,3 @@
   </Select>
 </div>
 
-<style>
-  .themed {
-    --background: rgb(168 85 247);
-    --border: rgb(88 28 135);
-    --border-hover: rgb(234 179 8);
-    --border-radius: 12px;
-    --font-size: 24px;
-    --item-color: rgb(88 28 135);
-    --item-hover-bg: rgb(88 28 135);
-    --item-hover-color: #000;
-    --list-background: rgb(168 85 247);
-    --list-border: 2px rgb(88 28 135);
-    --list-border-radius: 12px;
-    --input-color: rgb(88 28 135);
-    --input-padding: 4px;
-    --list-empty-color: #000;
-  }
-</style>

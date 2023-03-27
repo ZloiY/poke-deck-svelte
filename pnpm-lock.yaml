@@ -21,6 +21,7 @@ specifiers:
   superjson: ^1.12.2
   svelte: ^3.54.0
   svelte-forms-lib: ^2.0.1
+  svelte-infinite-scroll: ^2.0.1
   svelte-motion: ^0.11.5
   svelte-select: ^5.5.2
   tailwind-merge: ^1.10.0
@@ -50,6 +51,7 @@ dependencies:
   superjson: 1.12.2
   svelte: 3.57.0
   svelte-forms-lib: 2.0.1
+  svelte-infinite-scroll: 2.0.1
   svelte-select: 5.5.2
   tailwindcss: 3.2.7
   typescript: 5.0.2
@@ -3578,6 +3580,10 @@ packages:
       svelte: '>=3.19.0'
     dependencies:
       svelte: 3.57.0
+    dev: false
+
+  /svelte-infinite-scroll/2.0.1:
+    resolution: {integrity: sha512-goTHCfOHRDCs8C5MeSuIc6LlAQ8zVQ+M4Y3LyvrDjx5rqSSxSrdCuQwIyWYNcO6j6/mnqRro3QB64ClBzfn+Wg==}
     dev: false
 
   /svelte-motion/0.11.5_svelte@3.57.0:
