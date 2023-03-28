@@ -27,10 +27,14 @@
     limit: 15,
     totalLength: 1275,
     onNextPage: (nextPage) => {
-      location.assign(`/home/${nextPage}`);
+      const mayberQuery = location.href.split('?')[1]; 
+      const queryParams = mayberQuery ? `?${mayberQuery}` : '';
+      location.assign(`/home/${nextPage}${queryParams}`);
     },
     onPrevPage: (prevPage) => {
-      location.assign(`/home/${prevPage}`);
+      const mayberQuery = location.href.split('?')[1]; 
+      const queryParams = mayberQuery ? `?${mayberQuery}` : '';
+      location.assign(`/home/${prevPage}${queryParams}`);
     }
   })
   let pokemonsInDeckPromise = Promise.resolve([] as PokemonDB[]);
