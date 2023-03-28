@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { cardsGridStyle } from "src/utils/styles";
+  import { onMount } from "svelte";
   import { Motion } from "svelte-motion";
   import { twMerge } from "tailwind-merge";
+  import type { Deck } from "@prisma/client";
+  import { trpcAstro } from "src/api";
+  import { authHeader } from "src/utils/accessTokenStore";
+  import { cardsGridStyle } from "src/utils/styles";
+  import { pushNewMessage } from "src/utils/notificationStore";
   import AddDeckCard from "./Cards/Deck/AddDeckCard.svelte";
   import CreateDeck from "./Modals/CreateDeck.svelte";
   import DeckCard from "./Cards/Deck/DeckCard.svelte";
-  import { trpcAstro } from "src/api";
-  import { authHeader } from "src/utils/accessTokenStore";
-  import type { Deck } from "@prisma/client";
-  import { onMount } from "svelte";
-  import { pushNewMessage } from "src/utils/notificationStore";
   import Spinner from "./Spinner.svelte";
 
   const animationVariants = {
@@ -53,7 +53,8 @@
 
 </script>
 
-<div class="flex flex-col w-full h-full px-5 justify-center items-center">
+<div class={twMerge("flex flex-col w-full h-full gap-5 px-5",
+  decks.length == 0 && "justify-start")}>
   <CreateDeck {showModal} />
   {#if isFetching}
    <div class="absolute inset-0 z-[100] backdrop-blur-md flex justify-center items-center"> 

@@ -2,7 +2,7 @@
   import { twMerge } from "tailwind-merge";
   export let href: string;
 
-  const firstPart = typeof window !== undefined && location.pathname.split("/")[1];
+  const firstPart = typeof location !== undefined ? location.pathname.split("/")[1] : "";
   $:isHighLighted = `/${firstPart}` == href;
 </script>
 <a

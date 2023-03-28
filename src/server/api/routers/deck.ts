@@ -96,15 +96,8 @@ export const deckRouter = createTRPCRouter({
           },
         });
         return deck;
-      } else {
-        const userId = ctx.session.user.id;
-        const deck = await ctx.prisma.deck.findFirst({
-          where: {
-            userId,
-          },
-        });
-        return deck;
       }
+      return null;
     }),
   getEmptyUserDecks: protectedProcedure
     .input(

@@ -21,14 +21,14 @@
 </script>
 
 <div
-  class="mt-5 flex h-full flex-col gap-5"
+  class="mt-5 flex h-full w-full flex-col gap-5"
 >
  {#await Promise.all([pokemons, deck])}
-   <div class="flex justify-center items-center">
+   <div class="flex h-full justify-center items-center">
      <Spinner className="w-60 h-60" />
    </div>
  {:then [pokemonsResolved, deckResolved]} 
-   <div class="flex justify-between gap-5 text-3xl font-coiny text-white">
+   <div class="flex justify-between gap-5 text-3xl font-coiny text-white px-10">
      <span>Owner: {deckResolved?.username ?? "..."}</span>
      <span>Deck name: {deckResolved?.name ?? "..."}</span>
      <span>
@@ -38,7 +38,7 @@
    </div>
      <div class={twMerge("mt-5", cardsGridStyle)}>
        {#each pokemonsResolved as pokemon (pokemon.name)}
-         <DetailsCard pokemon={pokemon} />
+         <DetailsCard disableButtons={true} pokemon={pokemon} />
        {/each}
      </div>
  {/await}

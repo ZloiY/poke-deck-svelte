@@ -2,7 +2,6 @@
   import type { Pokemon } from "pokenode-ts";
   import type { Pokemon as PokemonDB } from "@prisma/client";
   import { Motion } from "svelte-motion";
-  import { twMerge } from "tailwind-merge";
   import PreviewCard from "./PreviewCard.svelte";
   import DetailsCard from "./DetailsCard.svelte";
 
@@ -13,7 +12,7 @@
   export let removeFromDeck: (pokemon: Pokemon) => void;
 
   $:isSelected = !![...selectedPokemons, ...pokemonsInDeck]
-  .find((selectedPokemon) => selectedPokemon.name == pokemon.name);
+    .find((selectedPokemon) => selectedPokemon.name == pokemon.name);
 
   $:isHovered = isSelected ? "Details" : keepFlipped;
   const setHovered = (state: FlipState) => {
@@ -71,9 +70,9 @@
       class="absolute top-0 z-30 opacity-0"
     >
       <DetailsCard
+        {isSelected}
         pokemon={pokemon}
-        selectedPokemons={selectedPokemons}
-        isSelected={isSelected}
+        selectedPokemons={selectedPokemons} 
         pokemonsInDeck={pokemonsInDeck}
         removeFromDeck={removeFromDeck}
       />

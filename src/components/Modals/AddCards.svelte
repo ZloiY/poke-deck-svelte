@@ -9,7 +9,7 @@
   import { trpcAstro } from "src/api";
   import { pushNewMessage } from "src/utils/notificationStore";
   import { authHeader } from "src/utils/accessTokenStore";
-    import DeckCard from "../Cards/Deck/DeckCard.svelte";
+  import DeckCard from "../Cards/Deck/DeckCard.svelte";
 
   export let deckId: string;
   export let showModal =  false;
@@ -44,7 +44,7 @@
 
 <ModalContainer title="Add cards to the decks" bind:showModal let:closeDialog>
     <div class="flex flex-col gap-5 min-w-[450px] max-w-[720px] px-2 pb-4">
-      <div class="flex gap-10 w-full px-1">
+      <div class="flex gap-10 w-full px-1 justify-end h-52">
       {#await Promise.all([selectedDeck, emptyUserDecks]) then [selectedDeckResolved, emptyUserDecksResolved]}
         {#if selectedDeckResolved}
           <DeckCard
@@ -59,6 +59,7 @@
           placeholder="Select deck..."
           name="Select deck where you want to add Pokemons"
           onChange={(newDeck) => (selectedDeck = Promise.resolve(newDeck))}
+          on:clear={() => (selectedDeck = Promise.resolve(null))}
           items={emptyUserDecksResolved}
         />
       {/await}

@@ -6,17 +6,19 @@
     
   import HighlightedLink from "./HighlightedLink.svelte";
   import { authPayload, resetTokens } from "src/utils/accessTokenStore";
+  import Spinner from "./Spinner.svelte";
+  import ModalContainer from "./Modals/ModalContainer.svelte";
 
   export let showFlip = true;
   let showNavMenu = false;
+  let showLoader = false;
 
-  const toggleNavMenu = () => {
-    showNavMenu = !showNavMenu;
-  }
-  
   const signOut = () => {
+    showLoader = true;
     resetTokens();
-    location.assign("/home");
+    if (typeof location !== "undefined") {
+      location.assign("/home");
+    }
   };
 </script>
 
@@ -27,12 +29,15 @@
     showNavMenu && "relative",
   )}
 >
+ <ModalContainer showModal={showLoader}>
+   <Spinner className="w-80 h-80 text-orange-500"/>
+ </ModalContainer>
   {#if $authPayload}
       <div
         role="button"
         class="text-white lg:hidden cursor-pointer
     hover:text-yellow-400 active:text-yellow-500 active:scale-90"
-        on:click={() => toggleNavMenu()}
+        on:click={() => (showNavMenu  = true)}
       >
         <BurgerMenu class="min-[580px]:w-20 min-[580px]:h-20 h-14 w-14" />
       </div>
@@ -42,7 +47,7 @@
           showNavMenu &&
             "absolute top-0 left-0 h-[100vh] w-[100vw] flex flex-col justify-center bg-purple-900 z-[100]",
         )}
-        on:click={() => toggleNavMenu()}
+        on:click={() => (showNavMenu = false)}
       >
         <HighlightedLink href="/home">Home</HighlightedLink>
         <HighlightedLink href="/decks">Decks</HighlightedLink>

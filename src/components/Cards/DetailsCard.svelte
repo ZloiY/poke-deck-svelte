@@ -12,6 +12,7 @@
   import { pushPokemon, removePokemon } from "src/utils/selectedPokemonsStore";
 
   export let isSelected = false;
+  export let disableButtons = false;
   export let pokemon: Pokemon;
   export let pokemonsInDeck: PokemonDB[] = [];
   export let selectedPokemons: Pokemon[] = [];
@@ -30,7 +31,7 @@
     } else {
       const newIndex = spriteIndex - 1;
       if (newIndex < 0) {
-        spriteIndex = 0;
+        spriteIndex = sprites.length - 1;
       } else {
         spriteIndex = newIndex;
       }
@@ -47,13 +48,14 @@
     pokemon?.sprites.front_female,
   ].filter((item) => !!item);
   $:currentSprite = sprites[spriteIndex];
+  $:isInDeck = !!pokemonsInDeck.find(({ name }) => name == pokemon.name) 
   $:pokemonAdded = !!selectedPokemons.find(({ name }) => name == pokemon.name)
   $:isDeckFull = selectedPokemons.length + pokemonsInDeck.length
     == +import.meta.env.PUBLIC_DECK_MAX_SIZE
 </script>
 
 <BlankCard
-  class={twMerge(
+  className={twMerge(
     "transition-all",
     isSelected && "shadow-[0_0_15px_4px] shadow-orange-500 scale-105",
   )}
@@ -67,7 +69,7 @@
         class="absolute top-2 left-2 h-7 w-7 cursor-pointer text-red-500 hover:text-red-400 z-10"
       />
     </div>
-  {:else if !removeFromDeck && $authPayload && !isDeckFull}
+  {:else if !removeFromDeck && $authPayload && !isDeckFull && !isInDeck}
     <div
       role="button"
       on:click={() => pushPokemon(pokemon)}

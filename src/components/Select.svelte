@@ -24,6 +24,7 @@
     </span>
   {/if}
   <Select {value} {label} {itemId} {placeholder} {items} 
+    on:clear
     --background="rgb(168 85 247)"
     --border="2px solid rgb(88 28 135)"
     --border-hover="rgb(234 179 8)"
@@ -31,6 +32,7 @@
     --font-size="24px"
     --list-background="transparent"
     --list-border="2px solid rgb(88 28 135)"
+    --placeholder-color="white"
     >
     <div class="h-8 w-8" slot="chevron-icon">
       <Chevron class="fill-purple-900 h-8 w-8"/>

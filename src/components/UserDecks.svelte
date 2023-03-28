@@ -78,7 +78,9 @@
       <AddDeckCard onClick={() => (showCreateDeckModal = true)} />
     {/if}
     {#if isInitialLoading}
-      <Spinner className="w-40 h-40"/> 
+      <div class="flex justify-center items-center flex-grow-[2]"> 
+        <Spinner className="w-60 h-60"/> 
+      </div>
     {/if}
     {#each decks as deck (deck.id)}
       <DeckCard

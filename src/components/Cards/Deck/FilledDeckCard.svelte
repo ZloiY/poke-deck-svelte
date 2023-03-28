@@ -11,6 +11,7 @@
   import { trpcAstro } from "src/api";
   import { authHeader } from "src/utils/accessTokenStore";
   import PreviewCard from "../PreviewCard.svelte";
+    import Spinner from "src/components/Spinner.svelte";
 
   export let className = "";
   export let notInteractive = false;
@@ -67,7 +68,7 @@
   {#if !deck.isFull && addCard}
     <div
       role="button"
-      on:click={() => addCard?.(deck.id)}
+      on:click|stopPropagation={() => addCard?.(deck.id)}
     >
       <Add
         class="absolute top-2 left-1 w-14 h-14 text-white hover:text-yellow-400 active:text-yellow-500 active:scale-90 cursor-pointer"
@@ -98,7 +99,9 @@
       on:mouseenter={() => (isHovered = true)}
       on:mouseleave={() => (isHovered = false)}
     >
-    {#await firstSixOrLess then firstSixOrLessResolved }
+    {#await firstSixOrLess } 
+      <Spinner className="w-40 h-40 text-white" />
+    {:then firstSixOrLessResolved }
       {#each firstSixOrLessResolved as pokemon, index (pokemon.name)}
         <Motion let:motion
           animate={{
@@ -139,7 +142,7 @@
   {#if removeDeck}
     <div
       role="button"
-      on:click={() => removeDeck?.(deck.id)}
+      on:click|stopPropagation={() => removeDeck?.(deck.id)}
     >
       <Delete
         class="absolute right-1 bottom-2 w-14 h-14 text-red-700 hover:text-red-500 active:text-red-600 active:scale-90"

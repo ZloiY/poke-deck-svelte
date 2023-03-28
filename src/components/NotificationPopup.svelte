@@ -20,10 +20,14 @@
   : "bg-red-600/70 shadow-[0px_0px_15px_4px] shadow-red-700")}>
   <div class="flex justify-between items-center w-full">
     <span class="text-2xl font-coiny">{message.state}!</span>
-    <Close
-      on:click={() => removeMessage(message)}
-      class="w-8 h-8 cursor-pointer active:scale-90"
-    />
+    <div
+     role="button"
+     on:click={() => removeMessage(message)}
+    >
+     <Close
+       class="w-8 h-8 cursor-pointer active:scale-90"
+     />
+    </div>
   </div>
   <p class="mt-5 text-center text-xl">{message.message}</p>
 </div>
