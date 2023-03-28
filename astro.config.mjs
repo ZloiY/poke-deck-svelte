@@ -5,7 +5,7 @@ import alias from '@rollup/plugin-alias';
 import svelteSVG from "vite-plugin-svelte-svg";
 import path from 'path';
 
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel/edge";
 
 // https://astro.build/config
 export default defineConfig({
