@@ -10,7 +10,8 @@ Another app where you can do different things with pokemons.
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
 - [Zod](https://zod.dev/)
-- [Svelte-Motion](https://svelte-motion.gradientdescent.de/)
+- [Svelte-Motion](https:///svelte-motion.gradientdescent.de/)
+- [Pokenode-ts](https://pokenode-ts.vercel.app/)
 
 ## How to launch
 
@@ -38,7 +39,7 @@ Also don't forget to create `db.sqlite` in `prisma/` directory.
 
 Remove the `prisma/migrations/` and launch
 
-    pnpx prisma generate
+    pnpx prisma migrate dev
 
 And now you can run
 
