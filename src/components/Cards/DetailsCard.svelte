@@ -69,7 +69,7 @@
         class="absolute top-2 left-2 h-7 w-7 cursor-pointer text-red-500 hover:text-red-400 z-10"
       />
     </div>
-  {:else if !removeFromDeck && $authPayload && !isDeckFull && !isInDeck}
+  {:else if !removeFromDeck && $authPayload && !isDeckFull && !isInDeck && !disableButtons}
     <div
       role="button"
       on:click={() => pushPokemon(pokemon)}

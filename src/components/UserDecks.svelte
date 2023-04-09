@@ -38,8 +38,16 @@
       const response = await trpcClient.deck.getUserDecks.query({ limit: 4 * numberOfFetches }); 
       decks = response.decks;
       newDecks = [];
-      isFetching = false;
-    } else {
+    }
+    isFetching = false;
+  }
+
+  const deckCreated = async (deckId?: string) => {
+    if (deckId) {
+      isFetching = true;
+      const response = await trpcClient.deck.getUserDecks.query({ limit: 4 * numberOfFetches }); 
+      decks = response.decks;
+      newDecks = [];
       isFetching = false;
     }
   }
@@ -58,7 +66,7 @@
   ]
 </script>
 
-<CreateDeck showModal={showCreateDeckModal} />
+<CreateDeck showModal={showCreateDeckModal} onComplete={deckCreated} />
 <div class="border-2 rounded-xl border-purple-900 bg-purple-800/60 p-2 pb-0 relative w-full">
   {#if isFetching}
     <div class="backdrop-blur-md flex justify-center items-center absolute top-0 left-0 w-full h-full z-50">

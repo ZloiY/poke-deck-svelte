@@ -1,9 +1,8 @@
 <script lang="ts">
   import type { Pokemon } from "pokenode-ts";
-  import { onMount } from "svelte";
   import type { Deck, Pokemon as PokemonDB } from "@prisma/client";
   import { pagination as paginationStore} from "src/utils/pagination";
-  import { selectedPokemons } from "src/utils/selectedPokemonsStore";
+  import { resetSelctedPokemons, selectedPokemons } from "src/utils/selectedPokemonsStore";
   import FlipCard from "./Cards/FlipCard.svelte";
   import PaginationButtons from "./PaginationButtons.svelte";
   import CardsGrid from "./CardsGrid.svelte";
@@ -19,6 +18,7 @@
   export let deckId = '';
   export let search = '';
   export let page = 0;
+  export let pokemons: Pokemon[] = [];
 
   let showModal = false;
 
@@ -39,22 +39,11 @@
   })
   let pokemonsInDeckPromise = Promise.resolve([] as PokemonDB[]);
   let emptyDeckPromise = Promise.resolve([] as Deck[]);
-  let promisePokemons = Promise.resolve([] as Pokemon[]) 
   const trpcClient = trpcAstro($authHeader);
-
-  onMount(() => {
-    promisePokemons = trpcClient.pokemon
-      .getPokemonList.query({ offset: page * 15, limit: 15, searchQuery: search })
-  });
 
   $: if ($authPayload) {
     pokemonsInDeckPromise = trpcClient.pokemon.getPokemonsByDeckId.query(deckId);
     emptyDeckPromise = trpcClient.deck.getEmptyUserDecks.query({ numberOfEmptySlots: 20 });
-  }
-
-  const refetch = () => {
-    promisePokemons = trpcClient.pokemon
-     .getPokemonList.query({ offset: page * 15, limit: 15, searchQuery: search })
   }
 
   const updateQuery = (search: string) => {
@@ -63,14 +52,26 @@
     }
   }
 
+  const deckCreated = (deckId?: string) => {
+    if ($selectedPokemons.length > 0 && deckId) {
+      resetSelctedPokemons();
+      location.assign(`/pokemons/${deckId}`);
+    }
+  }
+
+  const addingCards = (deckId: string) => {
+    resetSelctedPokemons();
+    location.assign(`/pokemons/${deckId}`)
+  }
+
 </script>
 <div class="flex flex-col h-full w-full">
   {#await emptyDeckPromise then emptyDecks}
     {#if deckId || emptyDecks.length > 0}
-      <AddCards bind:showModal deckId={deckId} onSubmit={refetch} />
+      <AddCards bind:showModal deckId={deckId} onSubmit={addingCards} />
     {/if}
     {#if emptyDecks.length == 0 && !deckId}
-      <CreateDeck bind:showModal cards={$selectedPokemons} />
+      <CreateDeck bind:showModal onComplete={deckCreated} cards={$selectedPokemons} />
     {/if}
   {/await}
   {#await pokemonsInDeckPromise then pokemonsInDeck }
@@ -88,9 +89,9 @@
   <div class="flex relative justify-center items-center">
     <SearchBar searchValue={search} onChange={updateQuery} />
   </div>
-  {#await Promise.all([promisePokemons, pokemonsInDeckPromise])}
+  {#await pokemonsInDeckPromise}
     <Spinner/>    
-  {:then [ pokemons, pokemonsInDeck ]} 
+  {:then pokemonsInDeck} 
     <CardsGrid
       paginationState={$paginationState}
       pokemons={pokemons}

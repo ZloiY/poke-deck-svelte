@@ -4,7 +4,7 @@
 
   export let onClick: () => void;
 </script>
-<BlankDeckCard onClick={onClick}>
+<BlankDeckCard on:click={onClick}>
   <div class="flex justify-center items-center w-full h-full">
     <div role="button">
       <Add class="w-64 h-60" />

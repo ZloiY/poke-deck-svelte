@@ -32,6 +32,12 @@
     fetchDecks();
   });
 
+  const deckCreated = (deckId?: string) => {
+    if (deckId) {
+      fetchDecks();
+    }
+  }
+
   const removeDeck = async (deckId: string) => {
     isFetching = true;
     const message = await trpcClient.deck.removeUserDeck.mutate(deckId);
@@ -55,7 +61,7 @@
 
 <div class={twMerge("flex flex-col w-full h-full gap-5 px-5",
   decks.length == 0 && "justify-start")}>
-  <CreateDeck {showModal} />
+  <CreateDeck {showModal} onComplete={deckCreated} />
   {#if isFetching}
    <div class="absolute inset-0 z-[100] backdrop-blur-md flex justify-center items-center"> 
      <Spinner className="w-60 h-60 text-orange-500 z-[101]" />

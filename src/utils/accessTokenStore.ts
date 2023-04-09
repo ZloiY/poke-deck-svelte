@@ -28,7 +28,10 @@ export const resetTokens = () => {
 
 export const authPayload = derived(readonly(tokenStorage), ($tokenStorage) => {
   if ($tokenStorage) {
-    return decodeToken($tokenStorage);
+    const decodedToken = decodeToken($tokenStorage);
+    if (decodedToken && decodedToken.exp > Date.now()) {
+      return decodedToken;
+    }
   }
   return null;
 });

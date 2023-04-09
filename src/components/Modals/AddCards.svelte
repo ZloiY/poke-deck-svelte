@@ -13,7 +13,7 @@
 
   export let deckId: string;
   export let showModal =  false;
-  export let onSubmit: () => void;
+  export let onSubmit: (deckId: string) => void;
   let isAdding = false;
   const trpcClient = trpcAstro($authHeader);
   let selectedDeck = trpcClient.deck.getUserDeckById.query({ deckId });
@@ -34,7 +34,7 @@
         });
       isAdding = false;
       pushNewMessage(message);
-      onSubmit();
+      onSubmit(selectedDeckResolved.id);
       closeModal();
     }
   }

@@ -12,6 +12,7 @@
 
   export let showModal = false;
   export let cards: Pokemon[]  = [];
+  export let onComplete: (deckId?: string) => void;
   const trpcClient = trpcAstro($authHeader);
 
   const { form, errors, handleChange, isValid } = createForm({
@@ -47,6 +48,7 @@
       }); 
       isLoading = false;
       pushNewMessage(message);
+      onComplete(message.deck?.id);
       closeModal();
     }
   }
