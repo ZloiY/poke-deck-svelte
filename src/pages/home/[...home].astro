@@ -6,7 +6,7 @@ import Home from "src/components/Home.svelte";
 import { getQueryParams } from "src/utils/queryParser";
 import { appRouter } from "src/server/api/root";
 import { prisma } from "src/server/db";
-import { PokemonClient } from "pokenode-ts";
+import { Pokemon, PokemonClient } from "pokenode-ts";
 
 const { home } = Astro.params;
 const queryShema = z.object({
@@ -19,8 +19,20 @@ const queryParams = getQueryParams<typeof queryShema>(url.href ?? "", queryShema
 const page = z.number().parse(+(home ?? '0'));
 const pokemonApi = new PokemonClient();
 const caller = appRouter.createCaller({ session: null, prisma, pokemonApi });
-const pokemons = await caller.pokemon
+let pokemons = await caller.pokemon
   .getPokemonList({ offset: page * 15, limit: 15, searchQuery: queryParams?.search });
+pokemons =  pokemons.map((pokemon) => {
+    const { name, id, stats, height, weight, sprites, abilities } = pokemon;
+    return {
+      id,
+      name,
+      stats,
+      height,
+      weight,
+      sprites,
+      abilities
+    } as Pokemon
+  })
 ---
 <HeaderLayout title="PokeDeck home" showFlip={true}>
   <Home
